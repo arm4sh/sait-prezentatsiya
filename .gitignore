@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Логи и временные файлы
+*.log
+node_modules/
+
+# Тяжёлые медиа — не кладём в Git (используй YouTube/Vimeo или Git LFS)
+*.mp4
+*.mov
+*.avi
