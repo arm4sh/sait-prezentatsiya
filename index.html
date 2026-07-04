@@ -125,6 +125,35 @@
   .callout h4{ font-size:16px; color:var(--blue-deep); margin-bottom:4px; }
   .callout p{ color:var(--text); font-size:14.5px; }
 
+  /* ---------- quiz demo ---------- */
+  .quiz-card{ margin-top:36px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 24px 60px -34px rgba(20,84,184,0.5); padding:40px; max-width:760px; }
+  .quiz-progress{ display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; }
+  .quiz-dot{ width:34px;height:34px;border-radius:9px;background:var(--blue-soft);color:var(--blue-deep);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px; flex-shrink:0; }
+  .quiz-dot.active{ background:var(--blue); color:#fff; }
+  .quiz-dot.correct{ background:var(--green); color:#fff; }
+  .quiz-dot.wrong{ background:var(--red); color:#fff; }
+  .quiz-qnum{ font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--blue); margin-bottom:10px; }
+  .quiz-question{ font-size:22px; font-weight:700; color:var(--ink); margin-bottom:26px; line-height:1.35; }
+  .quiz-answers{ display:flex; flex-direction:column; gap:12px; }
+  .quiz-answer{ text-align:left; padding:16px 20px; border-radius:12px; border:1px solid var(--line); background:#fff; font-size:15.5px; color:var(--text); cursor:pointer; transition: background .2s, border-color .2s, color .2s; font-family:inherit; }
+  .quiz-answer:hover:not(.disabled){ border-color:var(--blue); background:var(--blue-soft); }
+  .quiz-letter{ font-weight:700; color:var(--blue); margin-right:4px; }
+  .quiz-answer.correct{ background:var(--green); border-color:var(--green); color:#fff; }
+  .quiz-answer.correct .quiz-letter{ color:#fff; }
+  .quiz-answer.wrong{ background:var(--red); border-color:var(--red); color:#fff; }
+  .quiz-answer.wrong .quiz-letter{ color:#fff; }
+  .quiz-answer.disabled{ cursor:default; }
+  .quiz-explain{ margin-top:22px; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:12px; padding:18px 22px; font-size:14.5px; color:var(--text); display:none; }
+  .quiz-next{ margin-top:26px; background:var(--blue); color:#fff; border:none; padding:14px 28px; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; display:none; }
+  .quiz-next:hover{ background:var(--blue-dark); }
+  .quiz-result{ margin-top:36px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 24px 60px -34px rgba(20,84,184,0.5); padding:48px; max-width:760px; text-align:center; display:none; }
+  .quiz-score{ font-family:'Montserrat'; font-weight:800; font-size:52px; color:var(--blue); margin-bottom:14px; }
+  .quiz-result h3{ font-size:24px; color:var(--ink); margin-bottom:12px; }
+  .quiz-result p{ color:var(--text-dim); font-size:15.5px; max-width:520px; margin:0 auto 28px; }
+  .quiz-restart{ background:var(--blue); color:#fff; border:none; padding:14px 30px; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .quiz-restart:hover{ background:var(--blue-dark); }
+  .quiz-disclaimer{ margin-top:18px; font-size:13px; color:var(--text-dim); max-width:760px; }
+
   /* ---------- regulator ---------- */
   .reg{ background: var(--blue-soft); }
   .reg-grid{ display:grid; grid-template-columns: 1.2fr 1fr; gap:56px; align-items:center; }
@@ -225,6 +254,8 @@
     .proc-photo{ position:static; }
     .theory-photo img,.reg-photo img,.proc-photo img,.finale-photo img{ height:400px; }
     .reg-grid{ direction:ltr; }
+    .quiz-card,.quiz-result{ padding:26px; }
+    .quiz-question{ font-size:19px; }
   }
   @media (prefers-reduced-motion: reduce){
     .reveal{ opacity:1; transform:none; transition:none; }
@@ -278,6 +309,33 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- QUIZ DEMO -->
+<section>
+  <div class="wrap">
+    <span class="tag">Интерактивная демонстрация</span>
+    <h2 class="h2">Почувствуйте, как проходит приём теории</h2>
+    <p class="lead">Мини-тест из 5 вопросов ПДД — так выглядит модуль теоретической подготовки на платформе.</p>
+
+    <div class="quiz-card reveal" id="quiz-card">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="quiz-qnum" id="quiz-qnum"></div>
+      <h3 class="quiz-question" id="quiz-question"></h3>
+      <div class="quiz-answers" id="quiz-answers"></div>
+      <div class="quiz-explain" id="quiz-explain"></div>
+      <button class="quiz-next" id="quiz-next"></button>
+    </div>
+
+    <div class="quiz-result reveal" id="quiz-result">
+      <div class="quiz-score" id="quiz-score"></div>
+      <h3 id="quiz-result-title"></h3>
+      <p id="quiz-result-msg"></p>
+      <button class="quiz-restart" id="quiz-restart">Пройти ещё раз</button>
+    </div>
+
+    <p class="quiz-disclaimer">Демонстрационные вопросы в ознакомительных целях, иллюстрируют формат теоретического модуля платформы.</p>
   </div>
 </section>
 
@@ -458,6 +516,164 @@
       el.textContent=pre+fmt(t*e,o)+suf; if(p<1) requestAnimationFrame(f); })(st);
   }); },{threshold:0.4});
   document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+  // quiz demo
+  const quizData = [
+    {
+      q: 'Что означает дорожный знак «Уступите дорогу» (перевёрнутый треугольник)?',
+      answers: [
+        'Водитель обязан уступить дорогу транспортным средствам, движущимся по пересекаемой дороге',
+        'Стоянка в этом месте запрещена',
+        'Указывает направление объезда препятствия',
+        'Впереди установлен светофор'
+      ],
+      correct: 0,
+      explain: 'Знак 2.4 «Уступите дорогу» обязывает водителя пропустить транспорт, движущийся по пересекаемой дороге, и при необходимости остановиться перед перекрёстком.'
+    },
+    {
+      q: 'Кто имеет преимущество на нерегулируемом пешеходном переходе?',
+      answers: [
+        'Водитель, если его скорость выше 40 км/ч',
+        'Водитель общественного транспорта',
+        'Пешеход, уже вступивший на переход',
+        'Никто — переход закрыт для движения'
+      ],
+      correct: 2,
+      explain: 'Водитель обязан уступить дорогу пешеходам, которые уже вышли на нерегулируемый пешеходный переход или вступают на него.'
+    },
+    {
+      q: 'Разрешена ли остановка транспортного средства на пешеходном переходе и ближе 5 метров перед ним?',
+      answers: [
+        'Разрешена при включённой аварийной сигнализации',
+        'Запрещена',
+        'Разрешена в тёмное время суток',
+        'Разрешена, если поблизости нет других машин'
+      ],
+      correct: 1,
+      explain: 'Остановка и стоянка на пешеходных переходах и ближе 5 метров перед ними запрещены — это закрывает обзор пешеходам и другим водителям.'
+    },
+    {
+      q: 'Что означает зелёный мигающий сигнал светофора?',
+      answers: [
+        'Движение запрещено',
+        'Сигнал скоро сменится на запрещающий — нужно быть готовым остановиться',
+        'Разрешён только поворот направо',
+        'Действует только для пешеходов'
+      ],
+      correct: 1,
+      explain: 'Зелёный мигающий сигнал предупреждает, что действие разрешающего сигнала заканчивается и скоро включится жёлтый или красный.'
+    },
+    {
+      q: 'Обязательно ли включать указатель поворота перед перестроением в другую полосу?',
+      answers: [
+        'Нет, если дорога свободна',
+        'Да, заблаговременно, до начала манёвра',
+        'Только на автомагистрали',
+        'Только в тёмное время суток'
+      ],
+      correct: 1,
+      explain: 'Указатель поворота включается заранее, до начала перестроения, чтобы предупредить других участников движения о манёвре.'
+    }
+  ];
+
+  const quizState = { current: 0, score: 0, answered: false, history: [] };
+  const qCard = document.getElementById('quiz-card');
+  const qResult = document.getElementById('quiz-result');
+  const qProgress = document.getElementById('quiz-progress');
+  const qNum = document.getElementById('quiz-qnum');
+  const qQuestion = document.getElementById('quiz-question');
+  const qAnswers = document.getElementById('quiz-answers');
+  const qExplain = document.getElementById('quiz-explain');
+  const qNext = document.getElementById('quiz-next');
+
+  function renderQuizProgress(){
+    qProgress.innerHTML = '';
+    quizData.forEach((_, i)=>{
+      const d = document.createElement('div');
+      d.className = 'quiz-dot';
+      if(i === quizState.current) d.classList.add('active');
+      if(quizState.history[i] === true) d.classList.add('correct');
+      if(quizState.history[i] === false) d.classList.add('wrong');
+      d.textContent = i + 1;
+      qProgress.appendChild(d);
+    });
+  }
+
+  function renderQuiz(){
+    const item = quizData[quizState.current];
+    qNum.textContent = `Вопрос ${quizState.current + 1}/${quizData.length}`;
+    qQuestion.textContent = item.q;
+    qAnswers.innerHTML = '';
+    item.answers.forEach((a, i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'quiz-answer';
+      btn.innerHTML = `<span class="quiz-letter">${String.fromCharCode(65 + i)}.</span> ${a}`;
+      btn.addEventListener('click', ()=>selectQuizAnswer(i));
+      qAnswers.appendChild(btn);
+    });
+    qExplain.style.display = 'none';
+    qNext.style.display = 'none';
+    renderQuizProgress();
+  }
+
+  function selectQuizAnswer(i){
+    if(quizState.answered) return;
+    quizState.answered = true;
+    const item = quizData[quizState.current];
+    const buttons = qAnswers.querySelectorAll('.quiz-answer');
+    buttons.forEach((b, idx)=>{
+      b.classList.add('disabled');
+      if(idx === item.correct) b.classList.add('correct');
+      else if(idx === i) b.classList.add('wrong');
+    });
+    const isCorrect = i === item.correct;
+    if(isCorrect) quizState.score++;
+    quizState.history[quizState.current] = isCorrect;
+    qExplain.textContent = item.explain;
+    qExplain.style.display = 'block';
+    qNext.textContent = quizState.current === quizData.length - 1 ? 'Завершить тест' : 'Следующий вопрос →';
+    qNext.style.display = 'inline-flex';
+    renderQuizProgress();
+  }
+
+  qNext.addEventListener('click', ()=>{
+    if(quizState.current === quizData.length - 1){
+      showQuizResult();
+    } else {
+      quizState.current++;
+      quizState.answered = false;
+      renderQuiz();
+    }
+  });
+
+  function showQuizResult(){
+    qCard.style.display = 'none';
+    qResult.style.display = 'block';
+    const score = quizState.score;
+    let title, msg;
+    if(score === quizData.length){
+      title = 'Отличный результат!';
+      msg = 'Вы уверенно знаете ПДД — именно так теоретический модуль платформы проверяет готовность курсанта к экзамену.';
+    } else if(score >= 3){
+      title = 'Хороший результат';
+      msg = 'Есть пара тем на повторение — платформа автоматически покажет курсанту именно те разделы, где были ошибки.';
+    } else {
+      title = 'Стоит повторить теорию';
+      msg = 'Gate-логика платформы не допустит курсанта к экзамену, пока слабые темы не будут закрыты.';
+    }
+    document.getElementById('quiz-score').textContent = `${score}/${quizData.length}`;
+    document.getElementById('quiz-result-title').textContent = title;
+    document.getElementById('quiz-result-msg').textContent = msg;
+  }
+
+  document.getElementById('quiz-restart').addEventListener('click', ()=>{
+    quizState.current = 0; quizState.score = 0; quizState.answered = false; quizState.history = [];
+    qResult.style.display = 'none';
+    qCard.style.display = 'block';
+    renderQuiz();
+  });
+
+  renderQuiz();
 </script>
 
 </body>
