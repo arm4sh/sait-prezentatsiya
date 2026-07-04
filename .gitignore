@@ -13,3 +13,4 @@ node_modules/
 *.mp4
 *.mov
 *.avi
+!assets/demo.mp4

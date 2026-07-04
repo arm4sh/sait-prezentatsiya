@@ -198,6 +198,7 @@
   @keyframes ripple{ 0%{box-shadow:0 0 0 0 rgba(31,111,224,0.55)} 70%{box-shadow:0 0 0 26px rgba(31,111,224,0)} 100%{box-shadow:0 0 0 0 rgba(31,111,224,0)} }
   .video-frame .hint{ color:#9fb0c6; font-size:14px; max-width:420px; }
   .video-frame code{ font-family: ui-monospace, monospace; background:rgba(255,255,255,0.08); padding:2px 7px; border-radius:5px; color:#cfe0f7; }
+  .video-el{ width:100%; height:100%; object-fit:cover; display:block; }
 
   /* ---------- verdict finale ---------- */
   .finale-grid{ display:grid; grid-template-columns: 0.9fr 1.1fr; gap:56px; align-items:center; }
@@ -388,17 +389,10 @@
     <h2 class="h2">Как это выглядит в деле</h2>
     <p class="lead" style="color:#9fb0c6;">Место под демонстрационное видео работы платформы. Заменим этот блок на встроенный ролик.</p>
 
-    <!-- 🎬 ВИДЕО: замените блок ниже на <video> или <iframe> с вашим роликом.
-         Пример:
-         <video class="video-el" controls poster="assets/phone2.jpg">
-           <source src="assets/demo.mp4" type="video/mp4">
-         </video>
-    -->
     <div class="video-frame reveal" id="video-placeholder">
-      <div class="play">
-        <svg width="24" height="26" viewBox="0 0 24 26" fill="none"><path d="M22 11.27a2 2 0 010 3.46L4 25.06A2 2 0 011 23.33V2.67A2 2 0 014 .94L22 11.27z" fill="#fff"/></svg>
-      </div>
-      <div class="hint">Видео будет здесь. Вставьте <code>&lt;video&gt;</code> или ссылку на YouTube/Vimeo вместо этого блока.</div>
+      <video class="video-el" controls poster="assets/phone2.jpg">
+        <source src="assets/demo.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 </section>
