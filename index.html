@@ -200,6 +200,27 @@
   .proc-photo{ position:sticky; top:90px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); box-shadow:0 24px 60px -34px rgba(20,84,184,0.5); }
   .proc-photo img{ width:100%; height:640px; object-fit:cover; }
 
+  /* ---------- hardware ---------- */
+  .hw{ background: var(--blue-soft); }
+  .hw-grid{ display:grid; grid-template-columns: 1.05fr 1fr; gap:56px; align-items:center; }
+  .hw-photo{ border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); box-shadow:0 24px 60px -34px rgba(20,84,184,0.5); }
+  .hw-photo img{ width:100%; height:600px; object-fit:cover; }
+  .hw-tabs{ display:flex; gap:10px; margin-top:28px; flex-wrap:wrap; }
+  .hw-tab{ font-family:inherit; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--text); padding:12px 20px; border-radius:12px; font-size:14.5px; font-weight:700; transition: background .2s, color .2s, border-color .2s; }
+  .hw-tab.active{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  .hw-panel{ display:none; margin-top:22px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px; }
+  .hw-panel.active{ display:block; }
+  .hw-panel h3{ font-size:19px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+  .hw-panel .hw-sub{ font-size:14px; color:var(--text-dim); margin-bottom:18px; }
+  .hw-specs{ display:flex; flex-direction:column; gap:14px; }
+  .hw-spec{ display:flex; gap:14px; }
+  .hw-spec .ic{ flex-shrink:0; width:34px;height:34px;border-radius:9px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700; }
+  .hw-spec .val{ font-weight:700; color:var(--ink); font-size:14.5px; }
+  .hw-spec .desc{ color:var(--text-dim); font-size:14px; margin-top:2px; }
+  .hw-shot{ margin-top:44px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:0 24px 60px -34px rgba(20,84,184,0.5); }
+  .hw-shot img{ width:100%; display:block; }
+  .hw-shot .cap{ padding:16px 22px; font-size:13.5px; color:var(--text-dim); border-top:1px solid var(--line); }
+
   /* ---------- video slot ---------- */
   .video-sec{ background: var(--ink); color:#fff; }
   .video-sec .tag{ color:#8fc0ff; }
@@ -248,11 +269,11 @@
   footer .brand .glyph{ background:var(--blue); }
 
   @media (max-width: 900px){
-    .split,.reg-grid,.proc-grid,.finale-grid{ grid-template-columns:1fr; gap:36px; }
+    .split,.reg-grid,.proc-grid,.finale-grid,.hw-grid{ grid-template-columns:1fr; gap:36px; }
     .reg-cards{ grid-template-columns:1fr; }
     .band-stats{ grid-template-columns:1fr; gap:22px; }
     .proc-photo{ position:static; }
-    .theory-photo img,.reg-photo img,.proc-photo img,.finale-photo img{ height:400px; }
+    .theory-photo img,.reg-photo img,.proc-photo img,.finale-photo img,.hw-photo img{ height:400px; }
     .reg-grid{ direction:ltr; }
     .quiz-card,.quiz-result{ padding:26px; }
     .quiz-question{ font-size:19px; }
@@ -436,6 +457,54 @@
       <div class="proc-photo reveal">
         <img src="assets/phone1.jpg" alt="Интерфейс просмотра экзамена AutoExam">
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- HARDWARE -->
+<section class="hw">
+  <div class="wrap">
+    <div class="hw-grid">
+      <div class="hw-photo reveal">
+        <img src="assets/hardware.jpg" alt="Бортовой блок AutoExam Box с RTK-антеннами на торпедо автомобиля">
+      </div>
+      <div class="reveal">
+        <span class="tag">Хардвар на борту</span>
+        <h2 class="h2">Что именно фиксирует автомобиль</h2>
+        <p class="lead">Бортовой блок AutoExam Box объединяет спутниковое позиционирование и компьютерное зрение — вместе они и формируют объективный вердикт.</p>
+
+        <div class="hw-tabs">
+          <button class="hw-tab active" data-hw="rtk">RTK-модуль</button>
+          <button class="hw-tab" data-hw="cv">Computer Vision</button>
+        </div>
+
+        <div class="hw-panel active" id="hw-rtk">
+          <h3>Спутниковое позиционирование</h3>
+          <p class="hw-sub">Двухантенная RTK-система определяет положение и курс автомобиля с точностью, недостижимой для обычного GPS.</p>
+          <div class="hw-specs">
+            <div class="hw-spec"><div class="ic">±</div><div><div class="val">±1 см</div><div class="desc">точность позиционирования на трассе автодрома</div></div></div>
+            <div class="hw-spec"><div class="ic">∠</div><div><div class="val">≤ 0,2°</div><div class="desc">точность определения курсового угла благодаря второй антенне</div></div></div>
+            <div class="hw-spec"><div class="ic">⟳</div><div><div class="val">Поток в реальном времени</div><div class="desc">координаты, скорость и траектория передаются на сервер и в приложение-диспетчер без задержки</div></div></div>
+            <div class="hw-spec"><div class="ic">▣</div><div><div class="val">AutoExam Box</div><div class="desc">единый бортовой блок на каждом учебном автомобиле, с версией прошивки и диагностикой антенн в реальном времени</div></div></div>
+          </div>
+        </div>
+
+        <div class="hw-panel" id="hw-cv">
+          <h3>Компьютерное зрение</h3>
+          <p class="hw-sub">Бортовые камеры и алгоритмы распознавания фиксируют действия водителя, которые не считает спутниковый модуль.</p>
+          <div class="hw-specs">
+            <div class="hw-spec"><div class="ic">30+</div><div><div class="val">типов нарушений</div><div class="desc">от непристёгнутого ремня до невключённого поворотника — единый каталог критериев для всех автодромов</div></div></div>
+            <div class="hw-spec"><div class="ic">🚦</div><div><div class="val">Сигналы и элементы</div><div class="desc">распознаёт светофор, стоп-линию, разметку и дорожные знаки на полигоне</div></div></div>
+            <div class="hw-spec"><div class="ic">⏱</div><div><div class="val">Метка времени</div><div class="desc">каждое нарушение привязывается к конкретному элементу трассы и моменту записи для последующего разбора</div></div></div>
+            <div class="hw-spec"><div class="ic">✚</div><div><div class="val">Перекрёстная проверка</div><div class="desc">видео синхронизируется с телеметрией RTK-модуля, решение формируется по совокупности данных</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hw-shot reveal">
+      <img src="assets/exam-review.jpg" alt="Панель просмотра экзамена с состоянием датчиков и списком нарушений">
+      <div class="cap">Просмотр экзамена в панели диспетчера: траектория по полигону, состояние датчиков бортового блока и список нарушений с таймкодами.</div>
     </div>
   </div>
 </section>
@@ -674,6 +743,16 @@
   });
 
   renderQuiz();
+
+  // hardware tabs
+  document.querySelectorAll('.hw-tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.hw-tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.hw-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('hw-' + btn.dataset.hw).classList.add('active');
+    });
+  });
 </script>
 
 </body>
